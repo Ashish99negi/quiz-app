@@ -1,4 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* Import the prebuilt theme.
+   Choose the theme that matches what you selected during 'ng add @angular/material'.
+   Common themes:
+   - @import '@angular/material/prebuilt-themes/indigo-pink.css';
+   - @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+   - @import '@angular/material/prebuilt-themes/pink-bluegrey.css';
+   - @import '@angular/material/prebuilt-themes/purple-green.css';
+*/
+@import '@angular/material/prebuilt-themes/indigo-pink.css'; /* <-- Replace with your chosen theme */
+
+/* Import Material Icons font */
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+/* Global body and html styles (important for Material layout) */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif; /* Default Material font */
+}

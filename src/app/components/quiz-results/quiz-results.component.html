@@ -1,0 +1,59 @@
+<div class="quiz-results-container">
+  @if (quizResult) {
+    <mat-card class="results-card">
+      <mat-card-header class="results-header">
+        <mat-card-title>Quiz Results</mat-card-title>
+        <div class="header-right-actions">
+          <button mat-raised-button color="accent" (click)="startNewQuiz()">
+            Start New Quiz
+          </button>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+        <p>You answered {{ quizResult.correctAnswers }} out of {{ quizResult.totalQuestions }} questions correctly.</p>
+        <h2>Your Score: {{ quizResult.score | number:'1.0-0' }}%</h2>
+
+        <mat-accordion class="question-review">
+          @for (question of quizResult.questions; track question; let i = $index) {
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Question {{ i + 1 }}:
+                </mat-panel-title>
+                <mat-panel-description>
+                  @if (question.isCorrect) {
+                    <span class="correct-badge">Correct!</span>
+                  } @else {
+                    <span class="wrong-badge">Incorrect</span>
+                  }
+                  <span class="full-question-text-on-header-expansion" *ngIf="false">{{ question.question }}</span>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <div class="expansion-panel-content-wrapper">
+                <p class="expanded-question-text">
+                  <strong>Question {{ i + 1 }}:</strong> {{ question.question }}
+                </p>
+                <div class="options-review">
+                  @for (option of question.options; track option) {
+                    <p [ngClass]="getOptionClass(question, option)">
+                      {{ option }}
+                      @if (question.selectedAnswer === option && !question.isCorrect) {
+                        (Your answer)
+                      } @else if (option === question.correctAnswer) {
+                        (Correct answer)
+                      }
+                    </p>
+                  }
+                </div>
+              </div>
+            </mat-expansion-panel>
+          }
+        </mat-accordion>
+      </mat-card-content>
+      </mat-card>
+  } @else {
+    <p>No quiz results to display. Please take a quiz first!</p>
+    <button mat-raised-button color="primary" (click)="startNewQuiz()">Go to Quiz Configuration</button>
+  }
+</div>

@@ -1,0 +1,58 @@
+
+<div class="quiz-question-container">
+  @if (currentQuestion) {
+    <mat-card class="quiz-card">
+      <mat-card-header>
+        <mat-card-title>
+          Question {{ currentQuestionIndex + 1 }} / {{ questions.length }}
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p class="question-text">{{ currentQuestion.question }}</p>
+        <mat-radio-group
+          [(ngModel)]="selectedOption"
+          (change)="onOptionChange($event.value)"
+          class="options-group"
+        >
+          @for (option of currentQuestion.options; track option) {
+            <mat-radio-button [value]="option" class="option-item">
+              {{ option }}
+            </mat-radio-button>
+          }
+        </mat-radio-group>
+      </mat-card-content>
+      <mat-card-actions class="quiz-actions">
+        <!-- Previous Button -->
+        <button
+          mat-stroked-button
+          color="primary"
+          (click)="goToPreviousQuestion()"
+          [disabled]="currentQuestionIndex === 0"
+        >
+          Previous
+        </button>
+
+        <span class="spacer"></span>
+
+        <!-- Next / Finish Button -->
+        <button
+          mat-raised-button
+          color="{{ isLastQuestion ? 'accent' : 'primary' }}"
+          (click)="goToNextOrSubmit()"
+          [disabled]="selectedOption === null"
+        >
+          {{ isLastQuestion ? 'Finish Quiz' : 'Next' }}
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  } @else {
+    <mat-card class="quiz-card">
+      <mat-card-content>
+        <p>Loading quiz or no questions available. Please configure a quiz.</p>
+        <button mat-raised-button color="primary" routerLink="/">
+          Go to Quiz Configuration
+        </button>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>
