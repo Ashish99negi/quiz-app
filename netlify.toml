@@ -1,0 +1,7 @@
+[build]
+  publish = "dist/quiz-app/browser"
+  command = "ng build"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"

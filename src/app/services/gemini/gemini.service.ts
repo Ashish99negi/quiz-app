@@ -1,3 +1,4 @@
+// src/app/services/gemini/gemini.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
@@ -7,7 +8,7 @@ import { QuizQuestion } from '../../components/shared/models/quiz.model';
   providedIn: 'root',
 })
 export class GeminiService {
-  private apiUrl = '/api/generate-quiz';
+  private apiUrl = '/.netlify/functions/generate-quiz';
 
   constructor(private http: HttpClient) {}
 
