@@ -1,8 +1,7 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export default async function (request: VercelRequest, response: VercelResponse) {
-  console.log('Serverless function started for a request.'); 
+  console.log('Serverless function started for a request.');
 
   if (request.method !== 'POST') {
     return response.status(405).json({ message: 'Method Not Allowed' });
@@ -10,14 +9,13 @@ export default async function (request: VercelRequest, response: VercelResponse)
 
   try {
     const apiKey = process.env['GEMINI_API_KEY'] as string;
-    
+    const geminiApiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+
+    // --- CRUCIAL CHECK ---
     if (!apiKey || apiKey.trim() === '') {
       console.error('GEMINI_API_KEY environment variable is not set or is empty!');
       return response.status(500).json({ message: 'Server configuration error: API key missing or invalid.' });
     }
-
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
     const { topic, difficulty, numberOfQuestions } = request.body;
 
@@ -42,15 +40,35 @@ export default async function (request: VercelRequest, response: VercelResponse)
     ]
     `;
 
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    const payload = {
+        contents: [{
+            parts: [{ text: prompt }]
+        }]
+    };
+
+    const geminiResponse = await fetch(`${geminiApiUrl}?key=${apiKey}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+    });
+
+    if (!geminiResponse.ok) {
+        const errorText = await geminiResponse.text();
+        console.error('Gemini API returned an error:', geminiResponse.status, errorText);
+        return response.status(geminiResponse.status).json({ message: 'Failed to get a successful response from Gemini API.', details: errorText });
+    }
+
+    const geminiResult = await geminiResponse.json();
+    const text = geminiResult.candidates[0].content.parts[0].text;
     const cleanedText = text.replace(/```json\n|\n```/g, '').trim();
 
     const parsedQuestions = JSON.parse(cleanedText);
     return response.status(200).json(parsedQuestions);
 
   } catch (error) {
-    console.error('API call failed:', error);
+    console.error('API call failed in the try block:', error);
     return response.status(500).json({ message: 'Failed to generate quiz questions', error: (error as Error).message });
   }
 }
