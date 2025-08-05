@@ -1,11 +1,13 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
 
+console.log('API key is defined:', !!process.env['GEMINI_API_KEY']);
 const apiKey = process.env['GEMINI_API_KEY'] as string;
 const genAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
 export default async function (request: VercelRequest, response: VercelResponse) {
+    console.log('Serverless function has started.');
   if (request.method !== 'POST') {
     return response.status(405).json({ message: 'Method Not Allowed' });
   }
