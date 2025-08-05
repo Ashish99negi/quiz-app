@@ -2,7 +2,7 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export default async function (request: VercelRequest, response: VercelResponse) {
-  console.log('Serverless function started for a request.');
+  console.log('Serverless function started for a request.'); 
 
   if (request.method !== 'POST') {
     return response.status(405).json({ message: 'Method Not Allowed' });
@@ -11,9 +11,9 @@ export default async function (request: VercelRequest, response: VercelResponse)
   try {
     const apiKey = process.env['GEMINI_API_KEY'] as string;
     
-    if (!apiKey) {
-      console.error('GEMINI_API_KEY environment variable is not set!');
-      return response.status(500).json({ message: 'Server configuration error: API key missing.' });
+    if (!apiKey || apiKey.trim() === '') {
+      console.error('GEMINI_API_KEY environment variable is not set or is empty!');
+      return response.status(500).json({ message: 'Server configuration error: API key missing or invalid.' });
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);

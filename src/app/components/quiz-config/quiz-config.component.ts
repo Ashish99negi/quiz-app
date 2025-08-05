@@ -64,6 +64,7 @@ export class QuizConfigComponent {
   }
 
   async generateQuiz() {
+    console.log('Generating quiz with config:', this.quizConfig);
     if (!this.quizConfig.topic) {
       alert('Please enter a topic for the quiz.');
       return;
