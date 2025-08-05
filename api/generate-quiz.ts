@@ -39,10 +39,10 @@ export default async function (request: VercelRequest, response: VercelResponse)
     const cleanedText = text.replace(/```json\n|\n```/g, '').trim();
 
     const parsedQuestions = JSON.parse(cleanedText);
-    response.status(200).json(parsedQuestions);
+    return response.status(200).json(parsedQuestions);
 
   } catch (error) {
     console.error('API call failed:', error);
-    response.status(500).json({ message: 'Failed to generate quiz questions', error: (error as Error).message });
+    return response.status(500).json({ message: 'Failed to generate quiz questions', error: (error as Error).message });
   }
 }
