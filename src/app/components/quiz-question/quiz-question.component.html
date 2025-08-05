@@ -1,6 +1,18 @@
-
+<!-- src/app/components/quiz-question/quiz-question.component.html -->
 <div class="quiz-question-container">
   @if (currentQuestion) {
+    <!-- Timer Display (New) -->
+    @if (quizMode === 'timed') {
+      <mat-card class="timer-card">
+        <mat-card-content>
+          <div class="timer-display">
+            Time Remaining: <span class="time-value">{{ formatTime(timeRemaining) }}</span>
+          </div>
+          <mat-progress-bar mode="determinate" [value]="(timeRemaining / initialTimeLimit) * 100"></mat-progress-bar>
+        </mat-card-content>
+      </mat-card>
+    }
+
     <mat-card class="quiz-card">
       <mat-card-header>
         <mat-card-title>
@@ -32,12 +44,13 @@
           Previous
         </button>
 
+        <!-- Spacer to push buttons apart -->
         <span class="spacer"></span>
 
         <!-- Next / Finish Button -->
         <button
           mat-raised-button
-          color="{{ isLastQuestion ? 'accent' : 'primary' }}"
+          color="primary"
           (click)="goToNextOrSubmit()"
           [disabled]="selectedOption === null"
         >

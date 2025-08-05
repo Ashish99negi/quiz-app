@@ -1,3 +1,4 @@
+<!-- src/app/components/quiz-config/quiz-config.component.html -->
 <div class="quiz-config-container">
   <mat-card class="quiz-config-card">
     <mat-card-title>Configure Your Quiz</mat-card-title>
@@ -5,7 +6,14 @@
       <form (ngSubmit)="generateQuiz()">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Quiz Topic</mat-label>
-          <input matInput [(ngModel)]="quizConfig.topic" name="topic" autocomplete="off" required placeholder="e.g., 'Physics', 'World History', 'Programming'">
+          <input
+            matInput
+            [(ngModel)]="quizConfig.topic"
+            name="topic"
+            required
+            placeholder="e.g., 'Physics', 'World History', 'Programming'"
+            autocomplete="off"
+          />
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
@@ -26,7 +34,29 @@
           </mat-select>
         </mat-form-field>
 
-        <button mat-raised-button color="primary" type="submit">
+        <!-- New: Quiz Mode Selection -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Quiz Mode</mat-label>
+          <mat-select [(ngModel)]="quizConfig.mode" name="quizMode" (selectionChange)="onModeChange()">
+            @for (mode of quizModes; track mode) {
+              <mat-option [value]="mode">{{ mode | titlecase }} Mode</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <!-- New: Timed Mode Settings (conditionally displayed) -->
+        @if (quizConfig.mode === 'timed') {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Time Limit (minutes)</mat-label>
+            <mat-select [(ngModel)]="quizConfig.timedModeSettings!.timeLimitSeconds" name="timeLimit">
+              @for (time of timeLimitOptions; track time) {
+                <mat-option [value]="time * 60">{{ time }} minutes</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        }
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="isLoading || !quizConfig.topic">
           Generate Quiz
         </button>
       </form>

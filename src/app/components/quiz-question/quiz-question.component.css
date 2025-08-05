@@ -1,62 +1,97 @@
+/* src/app/components/quiz-question/quiz-question.component.css */
+
+/* Main container for the quiz question page */
 .quiz-question-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f0f2f5;
-    padding: 20px;
+  display: flex; /* Enable Flexbox */
+  flex-direction: column; /* Stack children (timer and quiz card) vertically */
+  justify-content: center; /* Center content vertically in the container */
+  align-items: center; /* Center content horizontally in the container */
+  min-height: calc(100vh - 64px); /* Take up full viewport height minus toolbar */
+  background-color: #f0f2f5; /* Light grey background */
+  padding: 20px; /* Padding around the content */
+  box-sizing: border-box; /* Include padding in element's total width and height */
 }
 
+/* Styling for the timer card */
+.timer-card {
+  max-width: 700px; /* Match the quiz card's max-width for alignment */
+  width: 100%; /* Take full width up to max-width */
+  margin-bottom: 20px; /* Space between timer card and quiz card */
+  padding: 10px 20px; /* Padding inside the timer card */
+  text-align: center; /* Center text inside the timer card */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+  border-radius: 8px; /* Rounded corners */
+  background-color: #ffffff; /* White background */
+}
+
+/* Styling for the "Time Remaining" text */
+.timer-display {
+  font-size: 1.5em; /* Larger font size */
+  font-weight: bold; /* Bold text */
+  color: #3f51b5; /* Primary color */
+  margin-bottom: 10px; /* Space below the text */
+}
+
+/* Styling for the actual time value (e.g., "04:52") */
+.time-value {
+  color: #f44336; /* Red color for emphasis */
+}
+
+/* Styling for the progress bar */
+mat-progress-bar {
+  height: 8px; /* Height of the progress bar */
+  border-radius: 4px; /* Rounded corners for the progress bar */
+}
+
+/* Styling for the main quiz question card */
 .quiz-card {
-    max-width: 700px;
-    width: 100%;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+  max-width: 700px; /* Max width, consistent with timer card */
+  width: 100%; /* Take full width up to max-width */
+  padding: 20px; /* Padding inside the card */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+  border-radius: 8px; /* Rounded corners */
+  background-color: #ffffff; /* White background */
 }
 
+/* Styling for the question title (e.g., "Question 1 / 10") */
 mat-card-title {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #3f51b5;
+  text-align: center; /* Center the title text */
+  margin-bottom: 20px; /* Space below the title */
+  color: #3f51b5; /* Primary color */
 }
 
+/* Styling for the actual question text */
 .question-text {
-    font-size: 1.2em;
-    margin-bottom: 20px;
-    line-height: 1.5;
+  font-size: 1.2em; /* Larger font size for readability */
+  margin-bottom: 20px; /* Space below the question */
+  line-height: 1.5; /* Improved line spacing */
 }
 
+/* Container for the radio button options */
 .options-group {
-    display: flex;
-    flex-direction: column;
+  display: flex; /* Use flexbox */
+  flex-direction: column; /* Stack radio buttons vertically */
 }
 
+/* Styling for individual radio button options */
 .option-item {
-    margin-bottom: 10px;
+  margin-bottom: 10px; /* Space between options */
 }
 
+/* Container for the action buttons (Previous, Next/Finish) */
 .quiz-actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
+  display: flex; /* Use flexbox */
+  justify-content: space-between; /* Pushes buttons to opposite ends */
+  margin-top: 20px; /* Space above buttons */
+  padding: 0 16px 16px; /* Padding for the action area */
 }
 
-button {
-    min-width: 150px;
-}
-
-.quiz-actions {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-    padding: 0 16px 16px;
-}
-
+/* Styling for buttons within the quiz-actions */
 .quiz-actions button {
-    min-width: 120px;
+  min-width: 120px; /* Minimum width for buttons */
 }
 
+/* Spacer element to push buttons apart */
 .quiz-actions .spacer {
-    flex: 1 1 auto;
+  flex: 1 1 auto; /* Takes up available space */
 }

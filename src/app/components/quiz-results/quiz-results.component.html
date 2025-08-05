@@ -1,3 +1,4 @@
+<!-- src/app/components/quiz-results/quiz-results.component.html -->
 <div class="quiz-results-container">
   @if (quizResult) {
     <mat-card class="results-card">
@@ -14,6 +15,14 @@
         <p>You answered {{ quizResult.correctAnswers }} out of {{ quizResult.totalQuestions }} questions correctly.</p>
         <h2>Your Score: {{ quizResult.score | number:'1.0-0' }}%</h2>
 
+        <!-- New: Display Quiz Mode -->
+        <p class="quiz-mode-display">Mode Played: <strong>{{ quizResult.mode | titlecase }}</strong></p>
+
+        <!-- New: Display Time Taken for Timed Mode -->
+        @if (quizResult.mode === 'timed' && quizResult.timeTakenSeconds !== undefined) {
+          <p class="time-taken-display">Time Taken: <strong>{{ formatTime(quizResult.timeTakenSeconds) }}</strong></p>
+        }
+
         <mat-accordion class="question-review">
           @for (question of quizResult.questions; track question; let i = $index) {
             <mat-expansion-panel>
@@ -27,7 +36,6 @@
                   } @else {
                     <span class="wrong-badge">Incorrect</span>
                   }
-                  <span class="full-question-text-on-header-expansion" *ngIf="false">{{ question.question }}</span>
                 </mat-panel-description>
               </mat-expansion-panel-header>
               <div class="expansion-panel-content-wrapper">
@@ -51,7 +59,7 @@
           }
         </mat-accordion>
       </mat-card-content>
-      </mat-card>
+    </mat-card>
   } @else {
     <p>No quiz results to display. Please take a quiz first!</p>
     <button mat-raised-button color="primary" (click)="startNewQuiz()">Go to Quiz Configuration</button>

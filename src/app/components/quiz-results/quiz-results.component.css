@@ -1,97 +1,113 @@
+/* src/app/components/quiz-results/quiz-results.component.css */
+
+/* Container for the entire results page content */
 .quiz-results-container {
     display: flex;
-    justify-content: center;
-    padding: 20px;
-    background-color: #f5f5f5;
-    min-height: calc(100vh - 64px);
-    box-sizing: border-box;
+    justify-content: center; /* Center content horizontally */
+    padding: 20px; /* Padding around the card */
+    background-color: #f5f5f5; /* Light background for the page */
+    min-height: calc(100vh - 64px); /* Ensure it takes up most of the viewport height, accounting for toolbar */
+    box-sizing: border-box; /* Include padding in element's total width and height */
 }
 
+/* Main card displaying the results */
 .results-card {
-    max-width: 800px;
-    width: 100%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    max-width: 800px; /* Maximum width for the card */
+    width: 100%; /* Take full width up to max-width */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    padding: 20px; /* Padding inside the card */
+    border-radius: 8px; /* Rounded corners for the card */
+    background-color: #ffffff; /* White background */
 }
 
+/* Header section of the results card (for title and "Start New Quiz" button) */
 .results-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #eee;
-    margin-bottom: 20px;
+    display: flex; /* Use flexbox for alignment */
+    justify-content: space-between; /* Pushes title to left, button to right */
+    align-items: center; /* Vertically align items in the center */
+    padding-bottom: 16px; /* Space below the header content */
+    border-bottom: 1px solid #eee; /* Separator line */
+    margin-bottom: 20px; /* Space between header and score display */
 }
 
+/* Title within the results header */
 .results-header .mat-card-title {
-    margin: 0;
-    flex-grow: 1;
+    margin: 0; /* Remove default margins from mat-card-title */
+    flex-grow: 1; /* Allows the title to take available space */
 }
 
+/* Container for actions (like the "Start New Quiz" button) in the header */
 .results-header .header-right-actions {
-
-    display: flex;
-    align-items: center;
+    display: flex; /* Use flexbox for button alignment */
+    align-items: center; /* Vertically align buttons */
 }
 
+/* Styling for buttons within the header-right-actions */
 .results-header .header-right-actions button {
-    margin-left: 10px;
+    margin-left: 10px; /* Space between buttons if multiple are added */
 }
 
+/* General paragraph styling */
 p {
     margin-bottom: 10px;
 }
 
+/* Styling for the main score heading */
 h2 {
     text-align: center;
-    color: #3f51b5;
+    color: #3f51b5; /* Primary brand color */
     margin-top: 16px;
     margin-bottom: 8px;
-    font-size: 2em;
+    font-size: 2em; /* Larger font size for score */
 }
 
+/* Container for the question review section (mat-accordion) */
 .question-review {
     margin-top: 20px;
 }
 
-
+/* Styling for individual Material Expansion Panels (accordion items) */
 .mat-expansion-panel {
-    margin-bottom: 10px;
-    border-radius: 8px !important;
-    overflow: hidden;
+    margin-bottom: 10px; /* Space between panels */
+    border-radius: 8px !important; /* Force rounded corners, important for Material */
+    overflow: hidden; /* Ensures content respects border-radius */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle shadow for panels */
 }
 
+/* Header of the expansion panel */
 .mat-expansion-panel .mat-expansion-panel-header {
-    min-height: 48px;
+    min-height: 48px; /* Standard Material header height */
 }
 
+/* Styling for "Correct!" and "Incorrect" badges in the panel header */
 .correct-badge,
 .wrong-badge {
     padding: 4px 8px;
     border-radius: 4px;
     font-weight: bold;
     font-size: 0.85em;
-    margin-left: 10px;
+    margin-left: 10px; /* Space from question number */
 }
 
 .correct-badge {
-    background-color: #e8f5e9;
-    color: #4CAF50;
+    background-color: #e8f5e9; /* Light green background */
+    color: #4CAF50; /* Darker green text */
 }
 
 .wrong-badge {
-    background-color: #ffebee;
-    color: #F44336;
+    background-color: #ffebee; /* Light red background */
+    color: #F44336; /* Darker red text */
 }
 
-
+/* Wrapper for the content inside the expanded panel */
 .expansion-panel-content-wrapper {
-    padding: 16px;
-    max-height: 300px;
-    overflow-y: auto;
-    box-sizing: border-box;
+    padding: 16px; /* Padding inside the expanded content area */
+    max-height: 300px; /* Maximum height for the content */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds max-height */
+    box-sizing: border-box; /* Include padding in height calculation */
 }
 
+/* Styling for the full question text when the panel is expanded */
 .expanded-question-text {
     font-size: 1.1em;
     font-weight: 500;
@@ -100,32 +116,49 @@ h2 {
     line-height: 1.4;
 }
 
+/* Styling for the options review paragraphs */
 .options-review p {
     padding: 8px 12px;
     margin-bottom: 5px;
     border-radius: 4px;
-    background-color: #f9f9f9;
-    border: 1px solid #eee;
+    background-color: #f9f9f9; /* Light background for options */
+    border: 1px solid #eee; /* Subtle border */
     font-size: 0.95em;
 }
 
+/* Styling for the selected and correct answer */
 .correct-answer-selected {
-    background-color: #e8f5e9;
-    color: #4CAF50;
+    background-color: #e8f5e9; /* Light green background */
+    color: #4CAF50; /* Green text */
     font-weight: bold;
-    border-color: #4CAF50;
+    border-color: #4CAF50; /* Green border */
 }
 
+/* Styling for the selected but incorrect answer */
 .wrong-answer-selected {
-    background-color: #ffebee;
-    color: #F44336;
+    background-color: #ffebee; /* Light red background */
+    color: #F44336; /* Red text */
     font-weight: bold;
-    border-color: #F44336;
+    border-color: #F44336; /* Red border */
 }
 
+/* Styling for the correct answer (when user selected wrong) */
 .correct-answer {
-    background-color: #e3f2fd;
-    color: #2196F3;
+    background-color: #e3f2fd; /* Light blue background */
+    color: #2196F3; /* Blue text */
     font-weight: bold;
-    border-color: #2196F3;
+    border-color: #2196F3; /* Blue border */
+}
+
+/* Styling for displaying quiz mode and time taken */
+.quiz-mode-display, .time-taken-display {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 1.1em;
+  color: #555;
+}
+
+/* Strong text within mode and time display */
+.quiz-mode-display strong, .time-taken-display strong {
+  color: #3f51b5; /* Primary brand color */
 }

@@ -1,6 +1,8 @@
+// src/app/services/quiz-data/quiz-data.service.ts
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { QuizConfig, QuizQuestion, QuizResult } from '../../components/shared/models/quiz.model';
+// Import the updated models including QuizMode and TimedModeSettings
+import { QuizConfig, QuizQuestion, QuizResult, QuizMode, TimedModeSettings } from '../../components/shared/models/quiz.model';
 
 @Injectable({
   providedIn: 'root',
@@ -23,14 +25,13 @@ export class QuizDataService {
   setQuizQuestions(questions: QuizQuestion[]) {
     const initializedQuestions = questions.map(q => ({
       ...q,
-      selectedAnswer: q.selectedAnswer || null, 
-      isCorrect: undefined 
+      selectedAnswer: q.selectedAnswer || null,
+      isCorrect: undefined
     }));
     this.quizQuestionsSource.next(initializedQuestions);
-    this.currentQuestionIndexSource.next(0); 
-    this.quizResultSource.next(null); 
+    this.currentQuestionIndexSource.next(0);
+    this.quizResultSource.next(null);
   }
-
 
   getQuizQuestions(): QuizQuestion[] {
     return this.quizQuestionsSource.getValue();
@@ -40,10 +41,9 @@ export class QuizDataService {
     const currentQuestions = this.quizQuestionsSource.value;
     if (currentQuestions[questionIndex]) {
       currentQuestions[questionIndex].selectedAnswer = selectedAnswer;
-    
       currentQuestions[questionIndex].isCorrect =
         selectedAnswer === currentQuestions[questionIndex].correctAnswer;
-      this.quizQuestionsSource.next([...currentQuestions]); 
+      this.quizQuestionsSource.next([...currentQuestions]);
     }
   }
 
@@ -53,7 +53,6 @@ export class QuizDataService {
     if (currentIndex < totalQuestions - 1) {
       this.currentQuestionIndexSource.next(currentIndex + 1);
     }
-    
   }
 
   moveToPreviousQuestion() {
@@ -63,7 +62,7 @@ export class QuizDataService {
     }
   }
 
-  submitQuiz() {
+  submitQuiz(timeTakenSeconds?: number) { // Added optional timeTakenSeconds parameter
     const questions = this.quizQuestionsSource.value;
     let correctAnswers = 0;
 
@@ -79,17 +78,26 @@ export class QuizDataService {
       }
     });
 
+    const config = this.getQuizConfig(); // Get current config to store mode
+    const mode = config ? config.mode : 'standard'; // Default to standard if config is null
+
     const result: QuizResult = {
       totalQuestions: questions.length,
       correctAnswers: correctAnswers,
       score: (correctAnswers / questions.length) * 100,
-      questions: questions, 
+      questions: questions,
+      mode: mode, // Store the mode
+      timeTakenSeconds: timeTakenSeconds // Store time if provided
     };
     this.quizResultSource.next(result);
   }
 
   setQuizConfig(config: QuizConfig) {
     this.quizConfigSource.next(config);
+  }
+
+  getQuizConfig(): QuizConfig | null { // Added getter for quiz config
+    return this.quizConfigSource.getValue();
   }
 
   resetQuiz() {
