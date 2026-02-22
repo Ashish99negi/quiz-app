@@ -1,7 +1,5 @@
-// src/app/services/quiz-data/quiz-data.service.ts
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-// Import the updated models including QuizMode and TimedModeSettings
 import { QuizConfig, QuizQuestion, QuizResult, QuizMode, TimedModeSettings } from '../../components/shared/models/quiz.model';
 
 @Injectable({
@@ -62,7 +60,7 @@ export class QuizDataService {
     }
   }
 
-  submitQuiz(timeTakenSeconds?: number) { // Added optional timeTakenSeconds parameter
+  submitQuiz(timeTakenSeconds?: number) {
     const questions = this.quizQuestionsSource.value;
     let correctAnswers = 0;
 
@@ -78,16 +76,16 @@ export class QuizDataService {
       }
     });
 
-    const config = this.getQuizConfig(); // Get current config to store mode
-    const mode = config ? config.mode : 'standard'; // Default to standard if config is null
+    const config = this.getQuizConfig();
+    const mode = config ? config.mode : 'standard';
 
     const result: QuizResult = {
       totalQuestions: questions.length,
       correctAnswers: correctAnswers,
       score: (correctAnswers / questions.length) * 100,
       questions: questions,
-      mode: mode, // Store the mode
-      timeTakenSeconds: timeTakenSeconds // Store time if provided
+      mode: mode,
+      timeTakenSeconds: timeTakenSeconds
     };
     this.quizResultSource.next(result);
   }
@@ -96,7 +94,7 @@ export class QuizDataService {
     this.quizConfigSource.next(config);
   }
 
-  getQuizConfig(): QuizConfig | null { // Added getter for quiz config
+  getQuizConfig(): QuizConfig | null {
     return this.quizConfigSource.getValue();
   }
 

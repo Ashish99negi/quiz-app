@@ -1,13 +1,11 @@
 import type { Handler } from '@netlify/functions';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-// Netlify automatically provides the API key from environment variables.
 const apiKey = process.env['GEMINI_API_KEY'];
 const genAI = new GoogleGenerativeAI(apiKey as string);
 const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
 export const handler: Handler = async (event: any) => {
-  // We only accept POST requests.
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
@@ -15,7 +13,6 @@ export const handler: Handler = async (event: any) => {
     };
   }
 
-  // Ensure the API key is set before proceeding.
   if (!apiKey) {
     console.error('API key is not set.');
     return {

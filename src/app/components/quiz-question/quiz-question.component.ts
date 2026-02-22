@@ -1,13 +1,9 @@
-// src/app/components/quiz-question/quiz-question.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatButtonModule } from '@angular/material/button';
-import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { QuizDataService } from '../../services/quiz-data/quiz-data.service';
-import { QuizConfig, QuizQuestion, QuizMode, TimedModeSettings, QuizResult } from '../shared/models/quiz.model';
+import { QuizQuestion, QuizMode } from '../shared/models/quiz.model';
 import { Router } from '@angular/router';
 import { Subscription, interval } from 'rxjs';
 
@@ -16,14 +12,11 @@ import { Subscription, interval } from 'rxjs';
   standalone: true,
   imports: [
     CommonModule,
-    MatCardModule,
-    MatRadioModule,
-    MatButtonModule,
-    FormsModule,
-    MatProgressBarModule
+    RouterLink,
+    MatProgressBarModule,
   ],
   templateUrl: './quiz-question.component.html',
-  styleUrls: ['./quiz-question.component.scss'],
+  styleUrls: ['./quiz-question.component.css'],
 })
 export class QuizQuestionComponent implements OnInit, OnDestroy {
   questions: QuizQuestion[] = [];
@@ -32,10 +25,13 @@ export class QuizQuestionComponent implements OnInit, OnDestroy {
   selectedOption: string | null = null;
 
   quizMode: QuizMode = 'standard';
+  quizTopic: string = '';
   initialTimeLimit: number = 0;
   timeRemaining: number = 0;
   private timerSubscription: Subscription | undefined;
   private quizStartTime: number | undefined;
+
+  optionLabels = ['A', 'B', 'C', 'D', 'E'];
 
   constructor(
     private quizDataService: QuizDataService,
@@ -46,6 +42,7 @@ export class QuizQuestionComponent implements OnInit, OnDestroy {
     this.quizDataService.currentQuizConfig.subscribe(config => {
       if (config) {
         this.quizMode = config.mode;
+        this.quizTopic = config.topic;
         if (this.quizMode === 'timed' && config.timedModeSettings) {
           this.initialTimeLimit = config.timedModeSettings.timeLimitSeconds;
           this.timeRemaining = this.initialTimeLimit;
@@ -53,7 +50,7 @@ export class QuizQuestionComponent implements OnInit, OnDestroy {
           this.quizStartTime = Date.now();
         }
       } else {
-        this.router.navigate(['/']);
+        this.router.navigate(['/configure']);
       }
     });
 
@@ -76,7 +73,7 @@ export class QuizQuestionComponent implements OnInit, OnDestroy {
 
   loadCurrentQuestion() {
     if (this.questions.length === 0) {
-      this.router.navigate(['/']);
+      this.router.navigate(['/configure']);
       return;
     }
 
@@ -88,23 +85,21 @@ export class QuizQuestionComponent implements OnInit, OnDestroy {
     }
   }
 
-  onOptionChange(option: string) {
+  onOptionSelect(option: string) {
     this.selectedOption = option;
     this.quizDataService.updateSelectedAnswer(this.currentQuestionIndex, option);
     if (this.quizMode === 'survival' && this.currentQuestion) {
-      const isCorrect = (option === this.currentQuestion.correctAnswer);
-      if (!isCorrect) {
-        this.submitQuizAndNavigate();
+      if (option !== this.currentQuestion.correctAnswer) {
+        setTimeout(() => this.submitQuizAndNavigate(), 600);
       }
     }
   }
 
   goToNextOrSubmit() {
     if (this.quizMode === 'survival' && this.currentQuestion && !this.currentQuestion.isCorrect) {
-        this.submitQuizAndNavigate();
-        return;
+      this.submitQuizAndNavigate();
+      return;
     }
-
     if (this.isLastQuestion) {
       this.submitQuizAndNavigate();
     } else {
@@ -120,11 +115,26 @@ export class QuizQuestionComponent implements OnInit, OnDestroy {
     return this.currentQuestionIndex === this.questions.length - 1;
   }
 
+  get progressPercent(): number {
+    if (this.questions.length === 0) return 0;
+    return ((this.currentQuestionIndex + 1) / this.questions.length) * 100;
+  }
+
+  get timerPercent(): number {
+    if (this.initialTimeLimit === 0) return 100;
+    return (this.timeRemaining / this.initialTimeLimit) * 100;
+  }
+
+  get timerColor(): string {
+    if (this.timerPercent > 50) return 'safe';
+    if (this.timerPercent > 25) return 'warning';
+    return 'danger';
+  }
+
   startTimer(): void {
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
     }
-
     this.timerSubscription = interval(1000).subscribe(() => {
       this.timeRemaining--;
       if (this.timeRemaining <= 0) {
@@ -137,9 +147,7 @@ export class QuizQuestionComponent implements OnInit, OnDestroy {
   formatTime(seconds: number): string {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    const formattedMinutes = String(minutes).padStart(2, '0');
-    const formattedSeconds = String(remainingSeconds).padStart(2, '0');
-    return `${formattedMinutes}:${formattedSeconds}`;
+    return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
   }
 
   submitQuizAndNavigate(): void {
@@ -147,11 +155,9 @@ export class QuizQuestionComponent implements OnInit, OnDestroy {
     if (this.quizMode === 'timed' && this.quizStartTime !== undefined) {
       timeTaken = Math.floor((Date.now() - this.quizStartTime) / 1000);
     }
-
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
     }
-
     this.quizDataService.submitQuiz(timeTaken);
     this.router.navigate(['/results']);
   }

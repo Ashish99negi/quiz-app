@@ -1,67 +1,155 @@
-<!-- src/app/components/quiz-results/quiz-results.component.html -->
-<div class="quiz-results-container">
+<div class="results-page">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-grid"></div>
+
   @if (quizResult) {
-    <mat-card class="results-card">
-      <mat-card-header class="results-header">
-        <mat-card-title>Quiz Results</mat-card-title>
-        <div class="header-right-actions">
-          <button mat-raised-button color="accent" (click)="startNewQuiz()">
-            Start New Quiz
-          </button>
+    <nav class="navbar">
+      <div class="nav-logo">
+        <span>⚡</span>
+        <span class="logo-text">Quiz Maniac</span>
+      </div>
+      <button class="new-quiz-btn" (click)="startNewQuiz()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+          <path d="M3 3v5h5"/>
+        </svg>
+        New Quiz
+      </button>
+    </nav>
+
+    <div class="results-container">
+      <div class="score-card">
+        <div class="score-left">
+          <div class="score-circle-wrapper">
+            <svg class="score-ring" width="130" height="130" viewBox="0 0 130 130">
+              <circle
+                cx="65" cy="65" r="54"
+                fill="none"
+                stroke="var(--surface-3)"
+                stroke-width="8"
+              />
+              <circle
+                cx="65" cy="65" r="54"
+                fill="none"
+                stroke="var(--primary)"
+                stroke-width="8"
+                stroke-linecap="round"
+                [style.stroke-dasharray]="circumference"
+                [style.stroke-dashoffset]="dashOffset"
+                [style.stroke]="scoreGrade.color"
+                transform="rotate(-90 65 65)"
+                class="score-arc"
+              />
+            </svg>
+            <div class="score-center">
+              <span class="score-number">{{ quizResult.score | number:'1.0-0' }}</span>
+              <span class="score-percent">%</span>
+            </div>
+          </div>
         </div>
-      </mat-card-header>
 
-      <mat-card-content>
-        <p>You answered {{ quizResult.correctAnswers }} out of {{ quizResult.totalQuestions }} questions correctly.</p>
-        <h2>Your Score: {{ quizResult.score | number:'1.0-0' }}%</h2>
+        <div class="score-right">
+          <div class="grade-badge" [style.color]="scoreGrade.color">
+            <span class="grade-emoji">{{ scoreGrade.emoji }}</span>
+            <span class="grade-label">{{ scoreGrade.label }}</span>
+          </div>
 
-        <!-- New: Display Quiz Mode -->
-        <p class="quiz-mode-display">Mode Played: <strong>{{ quizResult.mode | titlecase }}</strong></p>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-value green">{{ quizResult.correctAnswers }}</span>
+              <span class="stat-label">Correct</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value red">{{ quizResult.totalQuestions - quizResult.correctAnswers }}</span>
+              <span class="stat-label">Wrong</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value blue">{{ quizResult.totalQuestions }}</span>
+              <span class="stat-label">Total</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value purple">{{ quizResult.mode | titlecase }}</span>
+              <span class="stat-label">Mode</span>
+            </div>
+          </div>
 
-        <!-- New: Display Time Taken for Timed Mode -->
-        @if (quizResult.mode === 'timed' && quizResult.timeTakenSeconds !== undefined) {
-          <p class="time-taken-display">Time Taken: <strong>{{ formatTime(quizResult.timeTakenSeconds) }}</strong></p>
-        }
+          @if (quizResult.mode === 'timed' && quizResult.timeTakenSeconds !== undefined) {
+            <div class="time-taken">
+              <span>⏱</span>
+              Time: <strong>{{ formatTime(quizResult.timeTakenSeconds) }}</strong>
+            </div>
+          }
+        </div>
+      </div>
 
-        <mat-accordion class="question-review">
+      <div class="review-section">
+        <h2 class="review-title">Question Review</h2>
+        <p class="review-subtitle">Click any question to expand the answer</p>
+
+        <div class="review-list">
           @for (question of quizResult.questions; track question; let i = $index) {
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  Question {{ i + 1 }}:
-                </mat-panel-title>
-                <mat-panel-description>
-                  @if (question.isCorrect) {
-                    <span class="correct-badge">Correct!</span>
-                  } @else {
-                    <span class="wrong-badge">Incorrect</span>
-                  }
-                </mat-panel-description>
-              </mat-expansion-panel-header>
-              <div class="expansion-panel-content-wrapper">
-                <p class="expanded-question-text">
-                  <strong>Question {{ i + 1 }}:</strong> {{ question.question }}
-                </p>
-                <div class="options-review">
-                  @for (option of question.options; track option) {
-                    <p [ngClass]="getOptionClass(question, option)">
-                      {{ option }}
-                      @if (question.selectedAnswer === option && !question.isCorrect) {
-                        (Your answer)
-                      } @else if (option === question.correctAnswer) {
-                        (Correct answer)
-                      }
-                    </p>
-                  }
+            <div
+              class="review-item"
+              [class.correct]="question.isCorrect"
+              [class.wrong]="!question.isCorrect"
+              [class.expanded]="expandedIndex === i"
+              (click)="toggleExpand(i)"
+            >
+              <div class="review-item-header">
+                <div class="review-left">
+                  <div class="review-status-icon" [class.correct]="question.isCorrect" [class.wrong]="!question.isCorrect">
+                    {{ question.isCorrect ? '✓' : '✗' }}
+                  </div>
+                  <span class="review-q-num">Q{{ i + 1 }}</span>
+                  <span class="review-q-text">{{ question.question }}</span>
+                </div>
+                <div class="review-chevron" [class.open]="expandedIndex === i">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M6 9l6 6 6-6"/>
+                  </svg>
                 </div>
               </div>
-            </mat-expansion-panel>
+
+              @if (expandedIndex === i) {
+                <div class="review-item-body animate-fade-in">
+                  <div class="options-review">
+                    @for (option of question.options; track option) {
+                      <div class="review-option" [ngClass]="getOptionClass(question, option)">
+                        <span class="review-option-icon">{{ getOptionIcon(question, option) }}</span>
+                        <span class="review-option-text">{{ option }}</span>
+                        @if (question.selectedAnswer === option && !question.isCorrect) {
+                          <span class="tag tag-wrong">Your Answer</span>
+                        } @else if (option === question.correctAnswer) {
+                          <span class="tag tag-correct">Correct</span>
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
           }
-        </mat-accordion>
-      </mat-card-content>
-    </mat-card>
+        </div>
+      </div>
+
+      <div class="bottom-cta">
+        <button class="cta-btn" (click)="startNewQuiz()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+            <path d="M3 3v5h5"/>
+          </svg>
+          Start New Quiz
+        </button>
+      </div>
+    </div>
+
   } @else {
-    <p>No quiz results to display. Please take a quiz first!</p>
-    <button mat-raised-button color="primary" (click)="startNewQuiz()">Go to Quiz Configuration</button>
+    <div class="empty-state">
+      <div>📊</div>
+      <h2>No Results Found</h2>
+      <p>Please complete a quiz first.</p>
+      <button class="cta-btn" (click)="startNewQuiz()">Go Home</button>
+    </div>
   }
 </div>

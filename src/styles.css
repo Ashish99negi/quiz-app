@@ -1,22 +1,220 @@
-/* You can add global styles to this file, and also import other style files */
-
-/* Import the prebuilt theme.
-   Choose the theme that matches what you selected during 'ng add @angular/material'.
-   Common themes:
-   - @import '@angular/material/prebuilt-themes/indigo-pink.css';
-   - @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
-   - @import '@angular/material/prebuilt-themes/pink-bluegrey.css';
-   - @import '@angular/material/prebuilt-themes/purple-green.css';
-*/
-@import '@angular/material/prebuilt-themes/indigo-pink.css'; /* <-- Replace with your chosen theme */
-
-/* Import Material Icons font */
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-/* Global body and html styles (important for Material layout) */
+:root {
+  --bg: #07070f;
+  --surface: #0d0d1a;
+  --surface-2: #121224;
+  --surface-3: #18182e;
+  --border: #1e1e38;
+  --border-light: #262648;
+  --primary: #8b5cf6;
+  --primary-hover: #7c3aed;
+  --primary-light: #a78bfa;
+  --primary-glow: rgba(139, 92, 246, 0.25);
+  --accent: #22d3ee;
+  --accent-glow: rgba(34, 211, 238, 0.2);
+  --success: #10b981;
+  --success-bg: rgba(16, 185, 129, 0.12);
+  --success-border: rgba(16, 185, 129, 0.3);
+  --error: #f87171;
+  --error-bg: rgba(248, 113, 113, 0.12);
+  --error-border: rgba(248, 113, 113, 0.3);
+  --warning: #fbbf24;
+  --text-primary: #ededff;
+  --text-secondary: #8888aa;
+  --text-muted: #55557a;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --radius-lg: 20px;
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.5);
+  --transition: all 0.2s ease;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif; /* Default Material font */
+  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  background-color: var(--bg);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--surface);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-light);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+.mat-mdc-form-field {
+  --mdc-filled-text-field-container-color: var(--surface-2);
+  --mdc-outlined-text-field-outline-color: var(--border);
+  --mdc-outlined-text-field-focus-outline-color: var(--primary);
+  --mdc-outlined-text-field-label-text-color: var(--text-secondary);
+  --mdc-outlined-text-field-input-text-color: var(--text-primary);
+  --mdc-outlined-text-field-hover-outline-color: var(--border-light);
+}
+
+.mat-mdc-select-value-text {
+  color: var(--text-primary) !important;
+}
+
+.mat-mdc-select-arrow {
+  color: var(--text-secondary) !important;
+}
+
+.mat-mdc-form-field-label {
+  color: var(--text-secondary) !important;
+}
+
+.mat-mdc-option {
+  background-color: var(--surface-2) !important;
+  color: var(--text-primary) !important;
+}
+
+.mat-mdc-option:hover {
+  background-color: var(--surface-3) !important;
+}
+
+.mat-mdc-option.mdc-list-item--selected {
+  background-color: var(--primary-glow) !important;
+  color: var(--primary-light) !important;
+}
+
+.mat-mdc-select-panel {
+  background-color: var(--surface-2) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+.mdc-text-field--outlined .mdc-notched-outline__leading,
+.mdc-text-field--outlined .mdc-notched-outline__notch,
+.mdc-text-field--outlined .mdc-notched-outline__trailing {
+  border-color: var(--border) !important;
+}
+
+.mdc-text-field--outlined:not(.mdc-text-field--disabled):hover .mdc-notched-outline__leading,
+.mdc-text-field--outlined:not(.mdc-text-field--disabled):hover .mdc-notched-outline__notch,
+.mdc-text-field--outlined:not(.mdc-text-field--disabled):hover .mdc-notched-outline__trailing {
+  border-color: var(--border-light) !important;
+}
+
+.mdc-text-field--outlined.mdc-text-field--focused .mdc-notched-outline__leading,
+.mdc-text-field--outlined.mdc-text-field--focused .mdc-notched-outline__notch,
+.mdc-text-field--outlined.mdc-text-field--focused .mdc-notched-outline__trailing {
+  border-color: var(--primary) !important;
+}
+
+.mat-mdc-input-element {
+  color: var(--text-primary) !important;
+  caret-color: var(--primary) !important;
+}
+
+.mat-mdc-form-field-label {
+  color: var(--text-secondary) !important;
+}
+
+.mat-mdc-floating-label {
+  color: var(--text-secondary) !important;
+}
+
+.mdc-text-field--focused .mdc-floating-label {
+  color: var(--primary) !important;
+}
+
+.mat-mdc-progress-bar {
+  --mdc-linear-progress-active-indicator-color: var(--primary);
+  --mdc-linear-progress-track-color: var(--surface-3);
+}
+
+.mat-expansion-panel {
+  background-color: var(--surface-2) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-sm) !important;
+  box-shadow: none !important;
+}
+
+.mat-expansion-panel-header {
+  background-color: var(--surface-2) !important;
+}
+
+.mat-expansion-panel-header:hover {
+  background-color: var(--surface-3) !important;
+}
+
+.mat-expansion-panel-body {
+  background-color: var(--surface-2) !important;
+  color: var(--text-primary) !important;
+}
+
+.mat-expansion-panel-header-title {
+  color: var(--text-primary) !important;
+}
+
+.mat-expansion-panel-header-description {
+  color: var(--text-secondary) !important;
+}
+
+.mat-expansion-indicator::after {
+  color: var(--text-secondary) !important;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px var(--primary-glow); }
+  50% { box-shadow: 0 0 40px var(--primary-glow), 0 0 60px var(--primary-glow); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease forwards;
 }

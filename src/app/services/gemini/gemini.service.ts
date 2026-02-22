@@ -1,4 +1,3 @@
-// src/app/services/gemini/gemini.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';

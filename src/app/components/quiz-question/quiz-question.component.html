@@ -1,71 +1,118 @@
-<!-- src/app/components/quiz-question/quiz-question.component.html -->
-<div class="quiz-question-container">
+<div class="quiz-page">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-grid"></div>
+
   @if (currentQuestion) {
-    <!-- Timer Display (New) -->
-    @if (quizMode === 'timed') {
-      <mat-card class="timer-card">
-        <mat-card-content>
-          <div class="timer-display">
-            Time Remaining: <span class="time-value">{{ formatTime(timeRemaining) }}</span>
+    <header class="quiz-header">
+      <div class="header-left">
+        <div class="topic-chip">
+          <span>📚</span>
+          <span class="topic-text">{{ quizTopic }}</span>
+        </div>
+      </div>
+      <div class="header-center">
+        <span class="question-count">{{ currentQuestionIndex + 1 }} / {{ questions.length }}</span>
+      </div>
+      <div class="header-right">
+        @if (quizMode === 'timed') {
+          <div class="timer-chip" [class]="timerColor">
+            <span class="timer-icon">⏱</span>
+            <span class="timer-value">{{ formatTime(timeRemaining) }}</span>
           </div>
-          <mat-progress-bar mode="determinate" [value]="(timeRemaining / initialTimeLimit) * 100"></mat-progress-bar>
-        </mat-card-content>
-      </mat-card>
+        }
+        @if (quizMode === 'survival') {
+          <div class="mode-chip survival">
+            <span>💀</span>
+            <span>Survival</span>
+          </div>
+        }
+        @if (quizMode === 'standard') {
+          <div class="mode-chip standard">
+            <span>📝</span>
+            <span>Standard</span>
+          </div>
+        }
+      </div>
+    </header>
+
+    <div class="progress-track">
+      <div class="progress-fill" [style.width.%]="progressPercent"></div>
+    </div>
+
+    @if (quizMode === 'timed') {
+      <div class="timer-track">
+        <div
+          class="timer-fill"
+          [class]="timerColor"
+          [style.width.%]="timerPercent"
+        ></div>
+      </div>
     }
 
-    <mat-card class="quiz-card">
-      <mat-card-header>
-        <mat-card-title>
-          Question {{ currentQuestionIndex + 1 }} / {{ questions.length }}
-        </mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <p class="question-text">{{ currentQuestion.question }}</p>
-        <mat-radio-group
-          [(ngModel)]="selectedOption"
-          (change)="onOptionChange($event.value)"
-          class="options-group"
-        >
-          @for (option of currentQuestion.options; track option) {
-            <mat-radio-button [value]="option" class="option-item">
-              {{ option }}
-            </mat-radio-button>
+    <div class="quiz-container">
+      <div class="question-card">
+        <div class="progress-dots">
+          @for (q of questions; track q; let i = $index) {
+            <div
+              class="progress-dot"
+              [class.answered]="q.selectedAnswer !== null"
+              [class.current]="i === currentQuestionIndex"
+            ></div>
           }
-        </mat-radio-group>
-      </mat-card-content>
-      <mat-card-actions class="quiz-actions">
-        <!-- Previous Button -->
-        <button
-          mat-stroked-button
-          color="primary"
-          (click)="goToPreviousQuestion()"
-          [disabled]="currentQuestionIndex === 0"
-        >
-          Previous
-        </button>
+        </div>
 
-        <!-- Spacer to push buttons apart -->
-        <span class="spacer"></span>
+        <div class="question-section">
+          <p class="question-text">{{ currentQuestion.question }}</p>
+        </div>
 
-        <!-- Next / Finish Button -->
-        <button
-          mat-raised-button
-          color="primary"
-          (click)="goToNextOrSubmit()"
-          [disabled]="selectedOption === null"
-        >
-          {{ isLastQuestion ? 'Finish Quiz' : 'Next' }}
-        </button>
-      </mat-card-actions>
-    </mat-card>
+        <div class="options-list">
+          @for (option of currentQuestion.options; track option; let i = $index) {
+            <button
+              class="option-card"
+              [class.selected]="selectedOption === option"
+              (click)="onOptionSelect(option)"
+            >
+              <span class="option-label">{{ optionLabels[i] }}</span>
+              <span class="option-text">{{ option }}</span>
+              <span class="option-check" [class.visible]="selectedOption === option">✓</span>
+            </button>
+          }
+        </div>
+
+        <div class="quiz-nav">
+          <button
+            class="nav-btn secondary"
+            (click)="goToPreviousQuestion()"
+            [disabled]="currentQuestionIndex === 0"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M19 12H5M12 5l-7 7 7 7"/>
+            </svg>
+            Previous
+          </button>
+
+          <button
+            class="nav-btn primary"
+            (click)="goToNextOrSubmit()"
+            [disabled]="selectedOption === null"
+          >
+            {{ isLastQuestion ? 'Finish Quiz 🏁' : 'Next' }}
+            @if (!isLastQuestion) {
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+
   } @else {
-    <mat-card class="quiz-card">
-      <mat-card-content>
-        <p>Loading quiz or no questions available. Please configure a quiz.</p>
-        <button mat-raised-button color="primary" routerLink="/">
-          Go to Quiz Configuration
-        </button>
-      </mat-card-content>
-    </mat-card>
+    <div class="empty-state">
+      <div class="empty-icon">🎯</div>
+      <h2>No Quiz Active</h2>
+      <p>Please configure a quiz first.</p>
+      <button class="nav-btn primary" routerLink="/configure">Go to Configuration</button>
+    </div>
   }
 </div>
