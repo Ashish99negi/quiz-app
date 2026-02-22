@@ -3,7 +3,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const apiKey = process.env['GEMINI_API_KEY'];
 const genAI = new GoogleGenerativeAI(apiKey as string);
-const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
 export const handler: Handler = async (event: any) => {
   if (event.httpMethod !== 'POST') {
