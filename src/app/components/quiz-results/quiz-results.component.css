@@ -149,10 +149,10 @@
 }
 
 .score-percent {
-  font-size: 1.1rem;
+  font-size: 1.9rem;
   font-weight: 600;
   color: var(--text-secondary);
-  align-self: flex-end;
+  /* align-self: flex-end; */
   padding-bottom: 4px;
 }
 
